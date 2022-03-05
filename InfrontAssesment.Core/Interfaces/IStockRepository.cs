@@ -9,6 +9,10 @@ namespace InfrontAssesment.Core.Interfaces
 {
     public interface IStockRepository
     {
-        void AddStock(Stock stock);
+        Stock AddStock(Stock stock);
+        IEnumerable<Stock> GetAllStocks();
+        Stock GetStock(string symbol);
+        void DeleteStock(Stock stock);
+
     }
 }
