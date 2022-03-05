@@ -44,7 +44,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        stockRepository.AddStock(new Core.Models.Stock { Symbol = "XSDF" , Name= "XX Company", CurrentPrice = Convert.ToDecimal(344.32) });
         forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
     }
 }

@@ -16,9 +16,26 @@ namespace InfrontAssesment.Infrastructure.Repositories
         {
             _context = context;
         }
-        public void AddStock(Stock stock)
+        public Stock AddStock(Stock stock)
         {
             var result = _context.Stocks.Add(stock);
+            _context.SaveChanges();
+            return result.Entity;
+        }
+
+        public IEnumerable<Stock> GetAllStocks()
+        {
+            return _context.Stocks;
+        }
+
+        public Stock GetStock(string symbol)
+        {
+            return _context.Stocks.FirstOrDefault(x => x.Symbol == symbol);
+        }
+
+        public void DeleteStock(Stock stock)
+        {
+            _context.Stocks.Remove(stock);
             _context.SaveChanges();
         }
     }
