@@ -11,12 +11,8 @@ namespace InfrontAssesment.Core.Models
     {
         [Key]
         public string Symbol { get; set; }
-        public string Name { get; set; }
-        public decimal CurrentPrice { get; set; }
         public int NumberOfContracts { get; set; }
         public decimal BuyValue { get; set; }
-        public decimal CurrentValue { get; set; }
-        public decimal Yield { get; set; }
 
     }
 }

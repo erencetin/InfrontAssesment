@@ -2,37 +2,91 @@
 
 <PageTitle>Weather forecast</PageTitle>
 
+@using InfrontAssesment.Core.Dtos
 @using InfrontAssesment.Core.Interfaces
+@using InfrontAssesment.Core.Models
 @using InfrontAssesment.WebUI.Data
+@using Microsoft.EntityFrameworkCore
+
 @inject WeatherForecastService ForecastService
-@inject IStockRepository stockRepository
-<h1>Weather forecast</h1>
+@inject IStockOperationService stockOperationService
+<h1>Your Stock Portfolio</h1>
 
-<p>This component demonstrates fetching data from a service.</p>
+<p>Manage your portfolio</p>
 
-@if (forecasts == null)
+<div class="card w-25">
+    <div class="card-header">
+        Add Stock
+    </div>
+    <div class="card-body">
+        <table>
+            <tr>
+                <td>
+                    Symbol
+                </td>
+                <td>
+                    <input class="input-group" type="text" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Contracts
+                </td>
+                <td>
+                    <input type="number" />
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Buy Price
+                </td>
+                <td>
+                    <input type="number" />
+
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button class="btn btn-success" onclick="Buy">Buy</button>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+@if (!stocks.Any())
 {
     <p><em>Loading...</em></p>
 }
 else
 {
+    
     <table class="table">
         <thead>
             <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
+                <th>Symbol</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>#</th>
+                <th>Bought</th>
+                <th>Current</th>
+                <th>Yield</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts)
+            @foreach (var stock in stocks)
             {
                 <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
+                    <td>@stock.Symbol</td>
+                    <td>@stock.Name</td>
+                    <td>@stock.CurrentPrice</td>
+                    <td>@stock.NumberOfContracts</td>
+                    <td>@stock.BuyValue</td>
+                    <td>@stock.CurrentValue</td>
+                    <td>@stock.Yield</td>
+                    <td><button class="btn btn-danger" @onclick="Delete">Close</button></td>
                 </tr>
             }
         </tbody>
@@ -41,9 +95,21 @@ else
 
 @code {
     private WeatherForecast[]? forecasts;
+    private IEnumerable<StockDto> stocks = new List<StockDto>();
 
     protected override async Task OnInitializedAsync()
     {
+        stocks = await stockOperationService.GetStocksInPortfolio();
         forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+    }
+
+    private void Delete()
+    {
+
+    }
+
+    private void Buy()
+    {
+       
     }
 }
