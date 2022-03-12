@@ -46,8 +46,6 @@ namespace InfrontAssesment.Infrastructure.Services
                 newStock.Symbol = priceData.VwdKey;
                 newStock.BuyValue = buyValue * contract;
                 newStock.NumberOfContracts = contract;
-                
-                //TODO: Get Stock info from api
                 _stockRepository.AddStock(newStock);
             }
             else

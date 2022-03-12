@@ -65,7 +65,39 @@ namespace InfrontAssesment.Test.Services
             Assert.IsTrue(actual.Any(x => x.Symbol == "A" && x.CurrentPrice == 3));
             Assert.IsTrue(actual.Any(x => x.Symbol == "B" && x.CurrentPrice == 2));
             Assert.IsTrue(actual.Count() == 2);
+        }
 
+        [Test]
+        public async Task BuyStockShouldCallSaveChangesMethodWhenWeBuyExistingStock()
+        {
+            var expectedStock = new Stock
+            {
+                Symbol = "A",
+            };
+            
+            var priceRepositoryMock = new Mock<IPriceDataRepository>();
+            var stockRepositoryMock = new Mock<IStockRepository>();
+            var mapperMock = new Mock<IMapper>();
+            stockRepositoryMock.Setup(p => p.GetStock("A")).Returns(expectedStock);
+            priceRepositoryMock.Setup(p => p.GetPriceData("A")).ReturnsAsync(new PriceData { VwdKey = "A", Price = 3 });
+            var service = new StockOperationService(stockRepositoryMock.Object, priceRepositoryMock.Object, mapperMock.Object);
+            await service.BuyStock("A", 1, 1);
+            stockRepositoryMock.Verify(x => x.SaveChanges(), Times.Once);
+
+        }
+
+        [Test]
+        public async Task BuyStockShouldCallSaveChangesMethodWhenWeBuyNonExistingStock()
+        {
+            var priceRepositoryMock = new Mock<IPriceDataRepository>();
+            var stockRepositoryMock = new Mock<IStockRepository>();
+            var mapperMock = new Mock<IMapper>();
+
+            stockRepositoryMock.Setup(x => x.GetStock("A")).Returns((Stock)null);
+            priceRepositoryMock.Setup(p => p.GetPriceData("A")).ReturnsAsync(new PriceData { VwdKey = "A", Price = 3 });
+            var service = new StockOperationService(stockRepositoryMock.Object, priceRepositoryMock.Object, mapperMock.Object);
+            await service.BuyStock("A", 1, 1);
+            stockRepositoryMock.Verify(x => x.AddStock(It.IsAny<Stock>()), Times.Once);
 
         }
     }
