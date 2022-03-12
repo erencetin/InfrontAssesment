@@ -38,5 +38,10 @@ namespace InfrontAssesment.Infrastructure.Repositories
             _context.Stocks.Remove(stock);
             _context.SaveChanges();
         }
+
+        public void SaveChanges()
+        {
+            _context.SaveChanges();
+        }
     }
 }

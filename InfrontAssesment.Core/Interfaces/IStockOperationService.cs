@@ -11,5 +11,6 @@ namespace InfrontAssesment.Core.Interfaces
     public interface IStockOperationService
     {
         Task<IEnumerable<StockDto>> GetStocksInPortfolio();
+        Task BuyStock(string symbol, decimal buyValue, int contract);
     }
 }

@@ -13,6 +13,7 @@ namespace InfrontAssesment.Core.Interfaces
         IEnumerable<Stock> GetAllStocks();
         Stock GetStock(string symbol);
         void DeleteStock(Stock stock);
+        void SaveChanges();
 
     }
 }

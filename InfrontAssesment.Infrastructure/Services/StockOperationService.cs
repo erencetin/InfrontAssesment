@@ -54,8 +54,8 @@ namespace InfrontAssesment.Infrastructure.Services
             {
                 stock.BuyValue += buyValue * contract;
                 stock.NumberOfContracts += contract;
+                _stockRepository.SaveChanges();
             }
         }
-
     }
 }

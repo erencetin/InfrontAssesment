@@ -25,7 +25,7 @@
                     Symbol
                 </td>
                 <td>
-                    <input class="input-group" type="text" />
+                    <input class="input-group" @bind="@symbol"  type="text" />
                 </td>
             </tr>
             <tr>
@@ -33,7 +33,7 @@
                     Contracts
                 </td>
                 <td>
-                    <input type="number" />
+                    <input type="number" @bind="@contractCount" />
 
                 </td>
             </tr>
@@ -42,13 +42,13 @@
                     Buy Price
                 </td>
                 <td>
-                    <input type="number" />
+                    <input type="number" @bind="@buyPrice" />
 
                 </td>
             </tr>
             <tr>
                 <td colspan="2">
-                    <button class="btn btn-success" onclick="Buy">Buy</button>
+                    <button class="btn btn-success" @onclick="Buy">Buy</button>
                 </td>
             </tr>
         </table>
@@ -96,7 +96,9 @@ else
 @code {
     private WeatherForecast[]? forecasts;
     private IEnumerable<StockDto> stocks = new List<StockDto>();
-
+    private string symbol;
+    private int? contractCount = 0;
+    private decimal? buyPrice = 0;
     protected override async Task OnInitializedAsync()
     {
         stocks = await stockOperationService.GetStocksInPortfolio();
@@ -110,6 +112,6 @@ else
 
     private void Buy()
     {
-       
+        stockOperationService.BuyStock(symbol, buyPrice.Value, contractCount.Value);
     }
 }
