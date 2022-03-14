@@ -14,6 +14,6 @@ namespace InfrontAssesment.Core.Dtos
         public int NumberOfContracts { get; set; }
         public decimal BuyValue { get; set; }
         public decimal CurrentValue => CurrentPrice * NumberOfContracts;
-        public decimal Yield => (BuyValue - CurrentValue) * 100 / BuyValue;
+        public decimal Yield => Math.Round((CurrentValue - BuyValue) * 100 / BuyValue, 2);
     }
 }

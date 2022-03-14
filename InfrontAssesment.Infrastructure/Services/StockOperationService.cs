@@ -46,6 +46,7 @@ namespace InfrontAssesment.Infrastructure.Services
                 newStock.Symbol = priceData.VwdKey;
                 newStock.BuyValue = buyValue * contract;
                 newStock.NumberOfContracts = contract;
+                
                 _stockRepository.AddStock(newStock);
             }
             else
@@ -56,10 +57,15 @@ namespace InfrontAssesment.Infrastructure.Services
             }
         }
 
-        public async Task CloseStock(StockDto stock)
+        public async Task CloseStock(string symbol)
         {
-            var mappedStock = _mapper.Map<StockDto, Stock>(stock);
-            _stockRepository.DeleteStock(mappedStock);
-        }   
+            var stock = _stockRepository.GetStock(symbol);
+            _stockRepository.DeleteStock(stock);
+        }
+        
+        public async Task<PriceData> GetPriceData(string symbol)
+        {
+            return await _priceDataRepository.GetPriceData(symbol);
+        }
     }
 }

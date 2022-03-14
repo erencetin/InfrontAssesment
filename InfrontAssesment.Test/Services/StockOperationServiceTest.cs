@@ -100,5 +100,41 @@ namespace InfrontAssesment.Test.Services
             stockRepositoryMock.Verify(x => x.AddStock(It.IsAny<Stock>()), Times.Once);
 
         }
+
+        [Test]
+        public async Task CloseStockShouldCallDeleteStockOnce()
+        {
+            var priceRepositoryMock = new Mock<IPriceDataRepository>();
+            var stockRepositoryMock = new Mock<IStockRepository>();
+            var mapperMock = new Mock<IMapper>();
+            var expectedStock = new Stock
+            {
+                Symbol = "A"
+            };
+
+            stockRepositoryMock.Setup(x => x.GetStock("A")).Returns(expectedStock);
+            var service = new StockOperationService(stockRepositoryMock.Object, priceRepositoryMock.Object, mapperMock.Object);
+            await service.CloseStock("A");
+            stockRepositoryMock.Verify(x => x.DeleteStock(expectedStock), Times.Once);
+        }
+
+        [Test]
+        public async Task GetPriceDataShouldReturnValidPrice()
+        {
+            var priceRepositoryMock = new Mock<IPriceDataRepository>();
+            var stockRepositoryMock = new Mock<IStockRepository>();
+            var mapperMock = new Mock<IMapper>();
+            var expectedPrice = new PriceData
+            {
+                VwdKey = "A",
+                Price = 1
+            };
+
+            priceRepositoryMock.Setup(p => p.GetPriceData("A")).ReturnsAsync(expectedPrice);
+            var service = new StockOperationService(stockRepositoryMock.Object, priceRepositoryMock.Object, mapperMock.Object);
+            var actual = await service.GetPriceData("A");
+            priceRepositoryMock.Verify(x => x.GetPriceData("A"), Times.Once);
+            Assert.AreEqual(actual.Price, 1);
+        }
     }
 }
