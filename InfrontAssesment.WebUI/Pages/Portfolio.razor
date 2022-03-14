@@ -1,14 +1,12 @@
-﻿@page "/fetchdata"
+﻿@page "/portfolio"
 
 <PageTitle>Weather forecast</PageTitle>
 
 @using InfrontAssesment.Core.Dtos
 @using InfrontAssesment.Core.Interfaces
 @using InfrontAssesment.Core.Models
-@using InfrontAssesment.WebUI.Data
 @using Microsoft.EntityFrameworkCore
 
-@inject WeatherForecastService ForecastService
 @inject IStockOperationService stockOperationService
 <h1>Your Stock Portfolio</h1>
 
@@ -55,7 +53,7 @@
 
     </div>
 </div>
-@if (!stocks.Any())
+@if (!persistedStocks.Any())
 {
     <p><em>Loading...</em></p>
 }
@@ -76,7 +74,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var stock in stocks)
+            @foreach (var stock in persistedStocks)
             {
                 <tr>
                     <td>@stock.Symbol</td>
@@ -86,7 +84,7 @@ else
                     <td>@stock.BuyValue</td>
                     <td>@stock.CurrentValue</td>
                     <td>@stock.Yield</td>
-                    <td><button class="btn btn-danger" @onclick="Delete">Close</button></td>
+                    <td><button class="btn btn-danger" @onclick="() => Delete(stock)">Close</button></td>
                 </tr>
             }
         </tbody>
@@ -94,20 +92,22 @@ else
 }
 
 @code {
-    private WeatherForecast[]? forecasts;
-    private IEnumerable<StockDto> stocks = new List<StockDto>();
+    private IEnumerable<StockDto> persistedStocks = new List<StockDto>();
+    private IEnumerable<PriceData> stockPrices = new List<PriceData>();
+    private List<string> symbols = new List<string>();
+
     private string symbol;
     private int? contractCount = 0;
     private decimal? buyPrice = 0;
     protected override async Task OnInitializedAsync()
     {
-        stocks = await stockOperationService.GetStocksInPortfolio();
-        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        persistedStocks = await stockOperationService.GetStocksInPortfolio();
+        symbols = stockPrices.Select(s => s.VwdKey).ToList();
     }
 
-    private void Delete()
+    private async Task Delete(StockDto stock)
     {
-
+        await stockOperationService.CloseStock(stock);
     }
 
     private void Buy()

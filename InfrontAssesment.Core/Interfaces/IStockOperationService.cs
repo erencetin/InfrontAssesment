@@ -12,5 +12,6 @@ namespace InfrontAssesment.Core.Interfaces
     {
         Task<IEnumerable<StockDto>> GetStocksInPortfolio();
         Task BuyStock(string symbol, decimal buyValue, int contract);
+        Task CloseStock(StockDto stock);
     }
 }

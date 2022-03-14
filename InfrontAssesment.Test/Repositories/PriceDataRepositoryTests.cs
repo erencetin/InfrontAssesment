@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using InfrontAssesment.Infrastructure.Data;
+using InfrontAssesment.Infrastructure.Repositories;
 using Moq;
+using Moq.Protected;
 using NUnit.Framework;
 
 namespace InfrontAssesment.Test.Repositories
@@ -14,18 +17,37 @@ namespace InfrontAssesment.Test.Repositories
     public class PriceDataRepositoryTests
     {
         [Test]
-        public void GetPriceDataReturnCorrectPrice()
+        public async Task GetPriceDataReturnCorrectPrice()
         {
-            var contextMock = new Mock<IHttpClientFactory>();
-            var clientMock = new Mock<HttpClient>();
-            var newRequest = new HttpRequestMessage(HttpMethod.Get,
-                $"test_url");
-            var responseMessageMock = new Mock<HttpResponseMessage>();
-            responseMessageMock.Setup(r=>r.IsSuccessStatusCode).Returns(true);
-           // responseMessageMock.Setup(r => r.Content).Returns(new HttpContent( "{\"vwdKey\": \"ABN.NL\",\"name\": \"ABN AMRO BANK N.V.\"}");
-            clientMock.Setup(s => s.SendAsync(newRequest, CancellationToken.None)).ReturnsAsync(responseMessageMock.Object);
-
+            TestHttpClientFactory clientFactory = new TestHttpClientFactory();
+            var repository = new PriceDataRepository(clientFactory);
+            var actual = await repository.GetPriceData("ABN.NL");
+            Assert.AreEqual("ABN.NL", actual.VwdKey);
+            Assert.AreEqual("ABN AMRO BANK N.V.", actual.Name);
         }
 
+    }
+
+    public class TestHttpClientFactory : IHttpClientFactory
+    {
+        public HttpClient CreateClient(string name)
+        {
+            var messageHandlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            messageHandlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .Returns(async (HttpRequestMessage request, CancellationToken token) => {
+                    HttpResponseMessage response = new HttpResponseMessage
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        Content = new StringContent("{\"vwdKey\": \"ABN.NL\",\"name\": \"ABN AMRO BANK N.V.\"}")
+                    };
+
+                    return response;
+                })
+                .Verifiable();
+
+            var httpClient = new HttpClient(messageHandlerMock.Object);
+            return httpClient;
+        }
     }
 }

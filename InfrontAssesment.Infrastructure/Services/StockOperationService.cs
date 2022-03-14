@@ -55,5 +55,11 @@ namespace InfrontAssesment.Infrastructure.Services
                 _stockRepository.SaveChanges();
             }
         }
+
+        public async Task CloseStock(StockDto stock)
+        {
+            var mappedStock = _mapper.Map<StockDto, Stock>(stock);
+            _stockRepository.DeleteStock(mappedStock);
+        }   
     }
 }

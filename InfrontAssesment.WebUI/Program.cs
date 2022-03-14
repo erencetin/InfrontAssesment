@@ -1,7 +1,6 @@
 using InfrontAssesment.Core.Interfaces;
 using InfrontAssesment.Infrastructure.Data;
 using InfrontAssesment.Infrastructure.Repositories;
-using InfrontAssesment.WebUI.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +16,6 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddHttpClient();
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddTransient<IStockRepository, StockRepository>();
-builder.Services.AddTransient<WeatherForecastService>();
 builder.Services.AddTransient<IPriceDataRepository, PriceDataRepository>();
 builder.Services.AddTransient<IStockOperationService, StockOperationService>();
 

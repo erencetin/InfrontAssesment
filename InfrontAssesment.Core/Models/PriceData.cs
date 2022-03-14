@@ -25,27 +25,27 @@ namespace InfrontAssesment.Core.Models
         public decimal Price { get; set; }
 
         [JsonPropertyName("time")]
-        public DateTime Time { get; set; }
+        public DateTime? Time { get; set; }
 
         [JsonPropertyName("open")]
-        public decimal Open { get; set; }
+        public decimal? Open { get; set; }
 
         [JsonPropertyName("high")]
-        public decimal High { get; set; }
+        public decimal? High { get; set; }
 
         [JsonPropertyName("low")]
-        public decimal Low { get; set; }
+        public decimal? Low { get; set; }
 
         [JsonPropertyName("close")]
-        public decimal Close { get; set; }
+        public decimal? Close { get; set; }
 
         [JsonPropertyName("volume")]
-        public decimal Volume { get; set; }
+        public decimal? Volume { get; set; }
 
         [JsonPropertyName("previousClose")]
-        public decimal PreviousClose { get; set; }
+        public decimal? PreviousClose { get; set; }
 
         [JsonPropertyName("previousCloseTime")]
-        public DateTime PreviousCloseTime { get; set; }
+        public DateTime? PreviousCloseTime { get; set; }
     }
 }
