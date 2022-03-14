@@ -1,8 +1,8 @@
 # InfrontAssesment
 
-The application basically retrieves stock data from api. And allows user to change the buy price and contract count. 
+The application basically retrieves stock data from api. And allows users to add it in their portfolio. 
 As the first step you have to validate stock by pressing "Find" button. It retrieves current market price of the stock. 
-Then you can add the stock in your portfolio.
+Then you can add the stock in your portfolio. You can change buy price and contract count.
 You can also close the position you have already opened. It removes relevant symbol from db. 
 
 The Solution consists of 1 Console, 2 Class libraries and a test project. It uses SqlLite db to store portfolio data.
